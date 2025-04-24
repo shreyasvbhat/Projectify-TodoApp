@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 void main() {
   runApp(ToDoApp());
@@ -43,46 +41,22 @@ class _ToDoHomeState extends State<ToDoHome> {
   List<Map<String, dynamic>> tasks = [];
   TextEditingController controller = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    loadTasks();
-  }
-
-  void loadTasks() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? data = prefs.getString('tasks');
-    if (data != null) {
-      setState(() {
-        tasks = List<Map<String, dynamic>>.from(json.decode(data));
-      });
-    }
-  }
-
-  void saveTasks() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('tasks', json.encode(tasks));
-  }
-
   void addTask(String task) {
     setState(() {
       tasks.add({"task": task, "done": false});
       controller.clear();
-      saveTasks();
     });
   }
 
   void toggleTask(int index) {
     setState(() {
       tasks[index]['done'] = !tasks[index]['done'];
-      saveTasks();
     });
   }
 
   void deleteTask(int index) {
     setState(() {
       tasks.removeAt(index);
-      saveTasks();
     });
   }
 
